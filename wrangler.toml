@@ -1,4 +1,4 @@
-name = "dp-notes"
+name = "my-notes"
 main = "src/worker.js"
 compatibility_date = "2025-07-06"
 compatibility_flags = ["nodejs_compat"]
