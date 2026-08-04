@@ -124,6 +124,91 @@ main {
   unicode-bidi: plaintext;
 }
 
+.presetAction {
+  min-width: auto !important;
+  padding-inline: 0.9rem;
+}
+
+.presetAction.subtle {
+  opacity: 0.82;
+}
+
+.presetBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0 0.75rem 1rem;
+}
+
+.presetBarLabel {
+  color: var(--muted);
+  font-size: 0.92rem;
+  padding-top: 0.4rem;
+}
+
+.presetList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1 1 100%;
+}
+
+.presetChipWrap {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0.35rem;
+}
+
+.presetChip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: min(100%, 280px);
+  text-align: left;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #111;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.presetChip:hover {
+  border-color: #3d4652;
+}
+
+.presetChip.isActive {
+  border-color: #89b4ff;
+  box-shadow: 0 0 0 1px rgba(137, 180, 255, 0.16);
+}
+
+.presetChipLabel {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.presetChipMeta {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.2;
+}
+
+.presetChipDelete {
+  min-width: auto !important;
+  width: 2rem;
+  padding: 0;
+  border-radius: 12px;
+  align-self: stretch;
+  border: 1px solid var(--border);
+  background: #111;
+  color: var(--text);
+}
+
+.presetChipDelete:hover {
+  border-color: #3d4652;
+}
+
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

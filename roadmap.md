@@ -16,16 +16,16 @@
 - [x] 10-second undo for edits and deletes.
 - [x] Version history in the manage page with restore buttons.
 - [x] Two-snapshot history with diff display and snapshot deletion.
+- [x] Saved filters and favorite searches.
+- [x] Import / export JSON backup.
+- [x] Single-file offline HTML export.
 
 ## Next
-- Saved filters and favorite searches.
 - Keyboard shortcuts for search and navigation.
 - Recent cards.
 - Duplicate card action.
 
 ## Later
-- [x] Import / export JSON backup.
-- [x] Single-file offline HTML export.
 - Usage counters.
 - Multiple note collections under different paths.
 - Markdown rendering for richer notes.
