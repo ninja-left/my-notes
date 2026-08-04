@@ -1,0 +1,9 @@
+name = "dp-notes"
+main = "src/worker.js"
+compatibility_date = "2025-07-06"
+compatibility_flags = ["nodejs_compat"]
+
+[[kv_namespaces]]
+binding = "NOTES"
+id = "3753fac05b304c26ab621e1be9579216"
+preview_id = "3753fac05b304c26ab621e1be9579216"
