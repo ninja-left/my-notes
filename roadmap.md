@@ -4,6 +4,7 @@
 - [x] GitHub Actions deployment workflow with Wrangler.
 - [x] Default seeding disabled for public DB-only deployments.
 - [x] Pin/unpin controls replaced with icon buttons.
+- [x] Pinned label removed from card headers; icon now carries the state.
 - [x] Lazy KV bootstrap from `notes.js` only on a fresh empty namespace.
 - [x] Placeholder helpers in manage editor.
 - [x] Rename warning cards to important.
