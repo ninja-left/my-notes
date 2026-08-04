@@ -7,7 +7,24 @@ on:
   workflow_dispatch:
 
 jobs:
+  gate:
+    runs-on: ubuntu-slim
+    outputs:
+      run_build: ${{ steps.check.outputs.passed }}
+    steps:
+      - id: check
+        shell: bash
+        run: |
+          msg=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+          if [[ "${{ github.event_name }}" == "push" && "$msg" =~ Deploy; then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "passed=false" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy:
+    needs: gate
+    if: needs.gate.outputs.passed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
