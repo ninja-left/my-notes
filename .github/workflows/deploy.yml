@@ -10,7 +10,7 @@ jobs:
   gate:
     runs-on: ubuntu-slim
     outputs:
-      run_build: ${{ steps.check.outputs.passed }}
+      passed: ${{ steps.check.outputs.passed }}
     steps:
       - id: check
         shell: bash
