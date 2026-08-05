@@ -27,6 +27,7 @@ wrangler deploy
 - `/manage` hidden editor
 - `/api/notes` read notes
 - `/api/notes/:id` update/delete notes
+- `/api/notes/:id/usage` record public usage counters
 
 ## GitHub Actions
 
