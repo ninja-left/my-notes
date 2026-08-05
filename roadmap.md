@@ -26,7 +26,14 @@
 
 ## Next
 ### v2.1.0
-- Markdown rendering for richer notes.
+- Markdown rendering for richer notes, with sanitizing so user content stays safe.
+
+### v2.2.0
+- Markdown preview toggle.
+- Basic formatting helpers in the editor.
+
+### v2.3.0
+- Safer link handling and small editor UX polish.
 
 ### v3.0.0
-- Multiple note collections under different paths.
+- Multiple note collections under different paths, with the routing and storage changes needed to support them properly.
