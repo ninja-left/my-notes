@@ -256,6 +256,18 @@ main {
   background: rgba(255,255,255,0.12);
 }
 
+.usageMeta {
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 .defaultTitle input[type="checkbox"] {
   width: 1.15rem;
   height: 1.15rem;

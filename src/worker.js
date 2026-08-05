@@ -58,6 +58,15 @@ function normalizeBlock(block = {}) {
   };
 }
 
+function normalizeUsageStats(stats = {}) {
+  return {
+    opens: Math.max(0, Number(stats.opens || 0)),
+    copies: Math.max(0, Number(stats.copies || 0)),
+    lastOpenedAt: String(stats.lastOpenedAt || ''),
+    lastCopiedAt: String(stats.lastCopiedAt || ''),
+  };
+}
+
 function snapshotNote(note = {}) {
   return {
     id: String(note.id || ''),
@@ -66,6 +75,7 @@ function snapshotNote(note = {}) {
     index: Number(note.index || 1),
     done: !!note.done,
     blocks: Array.isArray(note.blocks) ? note.blocks.map(normalizeBlock) : [],
+    stats: normalizeUsageStats(note.stats),
   };
 }
 
@@ -219,6 +229,7 @@ function normalizeNote(note = {}, index = 1) {
     done: !!note.done,
     blocks: blocks.map(normalizeBlock),
     history,
+    stats: normalizeUsageStats(note.stats),
   };
 }
 
@@ -572,6 +583,34 @@ async function deleteHistory(env, id, body) {
   return notes[index];
 }
 
+async function recordUsage(env, id, body = {}) {
+  const notes = await loadNotes(env);
+  const index = notes.findIndex((note) => note.id === id);
+  if (index < 0) throw new Error('Note not found');
+
+  const current = notes[index];
+  const stats = normalizeUsageStats(current.stats);
+  const action = String(body.action || body.event || '').trim().toLowerCase();
+  const now = new Date().toISOString();
+
+  if (action === 'open' || action === 'view') {
+    stats.opens += 1;
+    stats.lastOpenedAt = now;
+  } else if (action === 'copy') {
+    stats.copies += 1;
+    stats.lastCopiedAt = now;
+  } else {
+    throw new Error('Usage action is required');
+  }
+
+  notes[index] = normalizeNote({
+    ...current,
+    stats,
+  }, current.index);
+  await saveNotes(env, notes);
+  return notes[index];
+}
+
 async function deleteNote(env, id) {
   const notes = await loadNotes(env);
   const filtered = notes.filter((note) => note.id !== id);
@@ -654,7 +693,7 @@ export default {
       return json({ ok: true }, 200, clearAuthHeaders());
     }
 
-    if (!isAuthed(request) && pathname.startsWith('/api/') && request.method !== 'GET') {
+    if (!isAuthed(request) && pathname.startsWith('/api/') && request.method !== 'GET' && !pathname.endsWith('/usage')) {
       return json({ error: 'Unauthorized' }, 401);
     }
 
@@ -675,6 +714,17 @@ export default {
         return json({ note });
       } catch (error) {
         return json({ error: error.message || 'Failed to restore note' }, 400);
+      }
+    }
+
+    if (pathname.startsWith('/api/notes/') && pathname.endsWith('/usage') && request.method === 'POST') {
+      try {
+        const id = decodeURIComponent(pathname.split('/')[3]);
+        const body = await parseBody(request);
+        const note = await recordUsage(env, id, body);
+        return json({ note });
+      } catch (error) {
+        return json({ error: error.message || 'Failed to record usage' }, 400);
       }
     }
 

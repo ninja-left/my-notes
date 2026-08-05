@@ -169,6 +169,24 @@ export const manageAppJs = `
     textarea.setSelectionRange(next, next);
   }
 
+  function normalizeUsageStats(stats) {
+    return {
+      opens: Math.max(0, Number((stats && stats.opens) || 0)),
+      copies: Math.max(0, Number((stats && stats.copies) || 0)),
+      lastOpenedAt: String((stats && stats.lastOpenedAt) || ''),
+      lastCopiedAt: String((stats && stats.lastCopiedAt) || ''),
+    };
+  }
+
+  function usageSummary(note) {
+    const stats = normalizeUsageStats(note && note.stats);
+    const openLabel = stats.opens === 1 ? 'open' : 'opens';
+    const copyLabel = stats.copies === 1 ? 'copy' : 'copies';
+    const lastOpen = stats.lastOpenedAt ? ' · last open ' + new Date(stats.lastOpenedAt).toLocaleString() : '';
+    const lastCopy = stats.lastCopiedAt ? ' · last copy ' + new Date(stats.lastCopiedAt).toLocaleString() : '';
+    return stats.opens + ' ' + openLabel + ' · ' + stats.copies + ' ' + copyLabel + lastOpen + lastCopy;
+  }
+
   function blockRow(block = {}) {
     const wrap = el('div', { className: 'blockItem' });
     const text = el('textarea', {
@@ -349,6 +367,11 @@ export const manageAppJs = `
     doneLabel.append(done, ' Done for now');
     doneRow.append(el('label', { textContent: 'State' }), doneLabel);
 
+    const usageRow = el('div', { className: 'editorRow' },
+      el('label', { textContent: 'Usage' }),
+      el('div', { className: 'historyMeta usageMeta', textContent: usageSummary(note) })
+    );
+
     const blocksRow = el('div', { className: 'editorRow' },
       el('label', { textContent: 'Blocks' }),
       blocksWrap,
@@ -459,7 +482,7 @@ export const manageAppJs = `
       await refresh();
     });
 
-    card.append(titleRow, kindRow, doneRow, blocksRow, history, footer);
+    card.append(titleRow, kindRow, doneRow, usageRow, blocksRow, history, footer);
     return card;
   }
 
