@@ -104,7 +104,7 @@ export const manageAppJs = `
 
   async function exportJsonBackup() {
     const data = await request('/manage/export.json', { method: 'GET' });
-    downloadText('dp-notes-backup.json', JSON.stringify(data, null, 2), 'application/json;charset=utf-8');
+    downloadText('my-notes-backup.json', JSON.stringify(data, null, 2), 'application/json;charset=utf-8');
     showToast('Backup exported');
   }
 
@@ -112,14 +112,14 @@ export const manageAppJs = `
     const res = await fetch('/manage/export.html', { credentials: 'same-origin' });
     const html = await res.text();
     if (!res.ok) throw new Error(html || 'Failed to export HTML');
-    downloadText('dp-notes-offline.html', html, 'text/html;charset=utf-8');
+    downloadText('my-notes-offline.html', html, 'text/html;charset=utf-8');
     showToast('Offline HTML exported');
   }
 
   async function importBackupFile(file) {
     if (!file) return;
     const form = new FormData();
-    form.append('file', file, file.name || 'dp-notes-backup.json');
+    form.append('file', file, file.name || 'my-notes-backup.json');
     const res = await fetch('/manage/import', {
       method: 'POST',
       credentials: 'same-origin',

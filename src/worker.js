@@ -439,7 +439,7 @@ async function replaceAllNotes(env, payload) {
 
 function exportHtmlAttachment(notes) {
   return response(publicShell(notes), 200, {
-    'content-disposition': 'attachment; filename="dp-notes-offline.html"',
+    'content-disposition': 'attachment; filename="my-notes-offline.html"',
   });
 }
 
@@ -651,7 +651,7 @@ export default {
       if (!isAuthed(request)) return response(manageLoginShell(), 401);
       const notes = sortByIndex(await loadNotes(env));
       return json(backupPayload(notes), 200, {
-        'content-disposition': 'attachment; filename="dp-notes-backup.json"',
+        'content-disposition': 'attachment; filename="my-notes-backup.json"',
       });
     }
 
