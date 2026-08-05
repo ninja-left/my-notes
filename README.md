@@ -1,6 +1,6 @@
 # dp-notes
 
-Cloudflare Worker version of a notes app.
+Cloudflare Worker version of my notes app.
 
 ## Files
 
@@ -39,3 +39,11 @@ These secrets are read:
 ## Seeding
 
 Default notes are only loaded when `SEED_DEFAULT_NOTES=true` is present in the worker environment. Leave it unset for public deployments so the database stays the single source of truth.
+
+## Keyboard shortcuts
+Key(s) | Function
+-- | --
+"/" key or Ctrl+K or Cmd+K | Search focus
+"j" and "k" keys or arrow keys | Move through visible cards
+"Home" and "End" keys | Jump through visible cards
+"Esc" key | Clear search focus

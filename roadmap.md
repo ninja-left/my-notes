@@ -19,9 +19,9 @@
 - [x] Saved filters and favorite searches.
 - [x] Import / export JSON backup.
 - [x] Single-file offline HTML export.
+- [x] Keyboard shortcuts for search and card navigation.
 
 ## Next
-- Keyboard shortcuts for search and navigation.
 - Recent cards.
 - Duplicate card action.
 
