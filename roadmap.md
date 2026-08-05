@@ -1,4 +1,4 @@
-# dp-notes roadmap
+# my-notes roadmap
 
 ## Done
 - [x] GitHub Actions deployment workflow with Wrangler.
@@ -20,12 +20,13 @@
 - [x] Import / export JSON backup.
 - [x] Single-file offline HTML export.
 - [x] Keyboard shortcuts for search and card navigation.
-
-## Next
+- [x] Usage counters.
 - [x] Recent cards quick-access strip.
 - [x] Duplicate card action in the editor.
 
-## Later
-- Usage counters.
-- Multiple note collections under different paths.
+## Next
+### v2.1.0
 - Markdown rendering for richer notes.
+
+### v3.0.0
+- Multiple note collections under different paths.
