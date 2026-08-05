@@ -22,8 +22,8 @@
 - [x] Keyboard shortcuts for search and card navigation.
 
 ## Next
-- Recent cards.
-- Duplicate card action.
+- [x] Recent cards quick-access strip.
+- [x] Duplicate card action in the editor.
 
 ## Later
 - Usage counters.

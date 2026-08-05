@@ -330,6 +330,7 @@ export const manageAppJs = `
 
     const addBlock = el('button', { type: 'button' }, 'Add block');
     const save = el('button', { type: 'button' }, 'Save');
+    const duplicate = el('button', { type: 'button' }, 'Duplicate');
     const del = el('button', { type: 'button' }, 'Delete');
 
     const titleRow = el('div', { className: 'editorRow' },
@@ -354,10 +355,40 @@ export const manageAppJs = `
       addBlock
     );
 
-    const footer = el('div', { className: 'noteActions' }, save, del);
+    const footer = el('div', { className: 'noteActions' }, save, duplicate, del);
     const history = historySection(note);
 
     addBlock.addEventListener('click', () => blocksWrap.appendChild(blockRow()));
+
+    duplicate.addEventListener('click', async () => {
+      if (!card.dataset.id) {
+        showToast('Save this card first');
+        return;
+      }
+
+      const payload = {
+        title: (String(titleInput.value || original.title || 'Untitled').trim() || 'Untitled') + ' (copy)',
+        kind: kindSelect.value,
+        done: done.checked,
+        blocks: [],
+      };
+      blocksWrap.querySelectorAll('.blockItem').forEach((item) => {
+        const text = item.querySelector('textarea').value;
+        const checks = item.querySelectorAll('input[type="checkbox"]');
+        payload.blocks.push({
+          text,
+          copyable: !!checks[0].checked,
+          explain: !!checks[1].checked,
+        });
+      });
+
+      await request('/api/notes', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      showToast('Duplicated');
+      await refresh();
+    });
 
     del.addEventListener('click', async () => {
       const id = card.dataset.id;
