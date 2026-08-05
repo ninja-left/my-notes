@@ -15,7 +15,7 @@ jobs:
       - id: check
         shell: bash
         run: |
-          msg=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+          msg=$(echo "${{ github.event.head_commit.message }}" | tail -n 1)
           if [[ "${{ github.event_name }}" == "push" && "$msg" =~ ^Deploy ]]; then
             echo "passed=true" >> "$GITHUB_OUTPUT"
           else
