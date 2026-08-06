@@ -10,6 +10,7 @@
 - [x] Rename warning cards to important.
 - [x] Public-side template placeholder filling.
 - [x] Public page storage fallback and load error isolation.
+- [x] Public page client-side note normalization and per-card render guard.
 - [x] Modal-based copy flow on the public page.
 - [x] Pinned cards.
 - [x] Collapsible categories.
