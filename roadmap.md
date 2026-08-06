@@ -23,11 +23,9 @@
 - [x] Usage counters.
 - [x] Recent cards quick-access strip.
 - [x] Duplicate card action in the editor.
+- [x] Sanitized Markdown rendering for public note blocks.
 
 ## Next
-### v2.1.0
-- Markdown rendering for richer notes, with sanitizing so user content stays safe.
-
 ### v2.2.0
 - Markdown preview toggle.
 - Basic formatting helpers in the editor.
