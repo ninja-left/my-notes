@@ -9,6 +9,7 @@
 - [x] Placeholder helpers in manage editor.
 - [x] Rename warning cards to important.
 - [x] Public-side template placeholder filling.
+- [x] Public page storage fallback and load error isolation.
 - [x] Modal-based copy flow on the public page.
 - [x] Pinned cards.
 - [x] Collapsible categories.
