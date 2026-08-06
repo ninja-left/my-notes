@@ -168,6 +168,222 @@ export const manageAppJs = `
     textarea.focus();
     textarea.setSelectionRange(next, next);
   }
+  function wrapSelection(textarea, prefix, suffix = prefix, placeholder = '') {
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+    const selected = textarea.value.slice(start, end);
+    const content = selected || placeholder;
+    const insertion = prefix + content + suffix;
+    textarea.value = textarea.value.slice(0, start) + insertion + textarea.value.slice(end);
+    const nextStart = start + prefix.length;
+    const nextEnd = nextStart + content.length;
+    textarea.focus();
+    textarea.setSelectionRange(nextStart, nextEnd);
+  }
+
+  function insertMarkdownLink(textarea) {
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+    const selected = textarea.value.slice(start, end).trim() || 'link text';
+    const insertion = '[' + selected + '](https://)';
+    textarea.value = textarea.value.slice(0, start) + insertion + textarea.value.slice(end);
+    const linkStart = start + selected.length + 3;
+    const linkEnd = linkStart + 'https://'.length;
+    textarea.focus();
+    textarea.setSelectionRange(linkStart, linkEnd);
+  }
+
+  function sanitizeMarkdownUrl(url) {
+    const raw = String(url || '').trim();
+    if (!raw) return '';
+    try {
+      const parsed = new URL(raw, window.location.origin);
+      if (['http:', 'https:', 'mailto:'].includes(parsed.protocol)) {
+        return parsed.href;
+      }
+    } catch (error) {
+      return '';
+    }
+    return '';
+  }
+
+  function appendInlineMarkdown(parent, text) {
+    const source = String(text ?? '');
+    let index = 0;
+    let buffer = '';
+
+    const flush = () => {
+      if (!buffer) return;
+      parent.appendChild(document.createTextNode(buffer));
+      buffer = '';
+    };
+
+    while (index < source.length) {
+      const rest = source.slice(index);
+
+      if (rest[0] === '\\\\' && index + 1 < source.length) {
+        buffer += source[index + 1];
+        index += 2;
+        continue;
+      }
+
+      const tokens = [
+        { match: rest.match(/^\\[([^\\]]+)\\]\\(([^)\\s]+)\\)/), kind: 'link' },
+        { match: rest.match(/^\`([^\`\\n]+)\`/), kind: 'code' },
+        { match: rest.match(/^\\*\\*([\\s\\S]+?)\\*\\*/), kind: 'strong' },
+        { match: rest.match(/^__([\\s\\S]+?)__/), kind: 'strong' },
+        { match: rest.match(/^~~([\\s\\S]+?)~~/), kind: 'strike' },
+        { match: rest.match(/^\\*([^*\\n]+)\\*/), kind: 'em' },
+        { match: rest.match(/^_([^_\\n]+)_/), kind: 'em' },
+      ];
+      const token = tokens.find((entry) => entry.match);
+
+      if (!token) {
+        buffer += source[index];
+        index += 1;
+        continue;
+      }
+
+      flush();
+      const full = token.match[0];
+      const first = token.match[1];
+      const second = token.match[2];
+
+      if (token.kind === 'link') {
+        const anchor = document.createElement('a');
+        anchor.textContent = first;
+        const href = sanitizeMarkdownUrl(second);
+        if (href) {
+          anchor.href = href;
+          anchor.rel = 'noreferrer noopener';
+          anchor.target = '_blank';
+        } else {
+          anchor.removeAttribute('href');
+        }
+        parent.appendChild(anchor);
+      } else if (token.kind === 'code') {
+        const code = document.createElement('code');
+        code.textContent = first;
+        parent.appendChild(code);
+      } else if (token.kind === 'strong') {
+        const strong = document.createElement('strong');
+        strong.textContent = first;
+        parent.appendChild(strong);
+      } else if (token.kind === 'strike') {
+        const strike = document.createElement('del');
+        strike.textContent = first;
+        parent.appendChild(strike);
+      } else if (token.kind === 'em') {
+        const em = document.createElement('em');
+        em.textContent = first;
+        parent.appendChild(em);
+      }
+
+      index += full.length;
+    }
+
+    flush();
+  }
+
+  function renderMarkdownPreview(text) {
+    const fragment = document.createDocumentFragment();
+    const lines = String(text ?? '').replace(/\\r\\n?/g, '\\n').split('\\n');
+    let paragraph = null;
+    let list = null;
+    let listType = '';
+    let quote = null;
+
+    const closeParagraph = () => { paragraph = null; };
+    const closeList = () => { list = null; listType = ''; };
+    const closeQuote = () => { quote = null; };
+
+    const startParagraph = () => {
+      if (!paragraph) {
+        paragraph = document.createElement('p');
+        paragraph.className = 'previewParagraph';
+        fragment.appendChild(paragraph);
+      }
+      return paragraph;
+    };
+
+    const startList = (nextType) => {
+      if (!list || listType !== nextType) {
+        closeList();
+        list = document.createElement(nextType);
+        list.className = 'previewList';
+        fragment.appendChild(list);
+        listType = nextType;
+      }
+      return list;
+    };
+
+    const startQuote = () => {
+      if (!quote) {
+        quote = document.createElement('blockquote');
+        quote.className = 'previewQuote';
+        fragment.appendChild(quote);
+      }
+      return quote;
+    };
+
+    for (const rawLine of lines) {
+      const line = String(rawLine ?? '');
+      const trimmed = line.trim();
+
+      if (!trimmed) {
+        closeParagraph();
+        closeList();
+        closeQuote();
+        continue;
+      }
+
+      const headingMatch = trimmed.match(/^(#{1,6})\\s+(.+)$/);
+      if (headingMatch) {
+        closeParagraph();
+        closeList();
+        closeQuote();
+        const heading = document.createElement('h' + headingMatch[1].length);
+        heading.className = 'previewHeading';
+        appendInlineMarkdown(heading, headingMatch[2]);
+        fragment.appendChild(heading);
+        continue;
+      }
+
+      const quoteMatch = trimmed.match(/^>\\s?(.*)$/);
+      if (quoteMatch) {
+        closeParagraph();
+        closeList();
+        const blockquote = startQuote();
+        const quoteLine = document.createElement('p');
+        quoteLine.className = 'previewQuoteLine';
+        appendInlineMarkdown(quoteLine, quoteMatch[1]);
+        blockquote.appendChild(quoteLine);
+        continue;
+      }
+
+      const listMatch = trimmed.match(/^(?:([-*+])|(\\d+)\\.)\\s+(.+)$/);
+      if (listMatch) {
+        closeParagraph();
+        closeQuote();
+        const ordered = !!listMatch[2];
+        const currentList = startList(ordered ? 'ol' : 'ul');
+        const item = document.createElement('li');
+        item.className = 'previewListItem';
+        appendInlineMarkdown(item, listMatch[3]);
+        currentList.appendChild(item);
+        continue;
+      }
+
+      const paragraphEl = startParagraph();
+      if (paragraphEl.childNodes.length) {
+        paragraphEl.appendChild(document.createElement('br'));
+      }
+      appendInlineMarkdown(paragraphEl, line);
+    }
+
+    return fragment;
+  }
+
 
   function normalizeUsageStats(stats) {
     return {
@@ -194,6 +410,42 @@ export const manageAppJs = `
       rows: '4',
       placeholder: 'Block text',
       value: block.text || '',
+    });
+
+    const toolbar = el('div', { className: 'formatToolbar' });
+    const makeButton = (label, title, action) => {
+      const button = el('button', { type: 'button', className: 'formatButton', title: title }, label);
+      button.addEventListener('click', action);
+      toolbar.appendChild(button);
+      return button;
+    };
+
+    makeButton('Bold', 'Wrap selection with bold markdown', () => wrapSelection(text, '**', '**', 'bold text'));
+    makeButton('Italic', 'Wrap selection with italic markdown', () => wrapSelection(text, '_', '_', 'italic text'));
+    makeButton('Code', 'Wrap selection with inline code markdown', () => wrapSelection(text, '\`', '\`', 'code'));
+    makeButton('Strike', 'Wrap selection with strike markdown', () => wrapSelection(text, '~~', '~~', 'struck text'));
+    makeButton('Link', 'Insert a markdown link', () => insertMarkdownLink(text));
+
+    const previewWrap = el('div', { className: 'blockPreview', hidden: 'hidden' });
+    const previewHeader = el('div', { className: 'blockPreviewHeader' });
+    const previewTitle = el('span', { className: 'blockPreviewLabel', textContent: 'Preview' });
+    const previewToggle = el('button', { type: 'button', className: 'formatButton subtle', textContent: 'Show preview' });
+    const previewBody = el('div', { className: 'blockPreviewBody' });
+
+    function refreshPreview() {
+      previewBody.innerHTML = '';
+      previewBody.appendChild(renderMarkdownPreview(text.value));
+    }
+
+    previewToggle.addEventListener('click', () => {
+      const isHidden = previewWrap.hidden;
+      previewWrap.hidden = !isHidden;
+      previewToggle.textContent = isHidden ? 'Hide preview' : 'Show preview';
+      if (isHidden) refreshPreview();
+    });
+
+    text.addEventListener('input', () => {
+      if (!previewWrap.hidden) refreshPreview();
     });
 
     const helper = el('details', { className: 'placeholderHelp' });
@@ -232,7 +484,9 @@ export const manageAppJs = `
     const remove = el('button', { type: 'button' }, 'Remove block');
 
     flags.append(copyLabel, explainLabel);
-    wrap.append(text, helper, flags, remove);
+    previewHeader.append(previewTitle, previewToggle);
+    previewWrap.append(previewHeader, previewBody);
+    wrap.append(toolbar, text, previewWrap, helper, flags, remove);
 
     remove.addEventListener('click', () => wrap.remove());
 
@@ -240,6 +494,7 @@ export const manageAppJs = `
   }
 
   function historySection(note) {
+
     const history = Array.isArray(note.history) ? note.history : [];
     const details = el('details', { className: 'historySection' });
     const summary = el('summary', { textContent: 'Version history (' + history.length + ')' });

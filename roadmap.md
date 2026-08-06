@@ -24,12 +24,10 @@
 - [x] Recent cards quick-access strip.
 - [x] Duplicate card action in the editor.
 - [x] Sanitized Markdown rendering for public note blocks.
+- [x] Markdown preview toggle in the editor.
+- [x] Basic formatting helpers in the editor.
 
 ## Next
-### v2.2.0
-- Markdown preview toggle.
-- Basic formatting helpers in the editor.
-
 ### v2.3.0
 - Safer link handling and small editor UX polish.
 

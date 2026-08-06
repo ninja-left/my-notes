@@ -541,6 +541,92 @@ main {
   background: rgba(255,255,255,0.02);
 }
 
+.formatToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.formatButton {
+  border: 1px solid var(--border);
+  background: #0f0f0f;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.formatButton:hover {
+  border-color: #3d4652;
+}
+
+.formatButton.subtle {
+  opacity: 0.85;
+}
+
+.blockPreview {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+}
+
+.blockPreview[hidden] {
+  display: none !important;
+}
+
+.blockPreviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.blockPreviewLabel {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.blockPreviewBody {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.previewParagraph,
+.previewList,
+.previewQuote {
+  margin: 0;
+}
+
+.previewHeading {
+  margin: 0;
+}
+
+.previewList {
+  padding-inline-start: 1.2rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.previewQuote {
+  margin: 0;
+  padding-inline-start: 0.8rem;
+  border-inline-start: 3px solid rgba(255,255,255,0.12);
+  color: var(--muted);
+}
+
+.previewQuoteLine + .previewQuoteLine {
+  margin-top: 0.35rem;
+}
+
+.previewListItem {
+  margin: 0;
+}
+
+
 .blockFlags {
   display: flex;
   gap: 1rem;
