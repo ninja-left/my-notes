@@ -124,6 +124,26 @@ main {
   unicode-bidi: plaintext;
 }
 
+.pageVersion {
+  margin-inline-start: auto;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.03);
+}
+
+.pageStats {
+  display: block;
+  width: 100%;
+  margin: 0.75rem 0 0;
+  text-align: right;
+}
+
+.manageVersion {
+  display: inline-flex;
+  margin: 0 0 0.9rem;
+}
+
 .presetAction {
   min-width: auto !important;
   padding-inline: 0.9rem;
@@ -661,6 +681,8 @@ main {
   .topBar { padding: 0.6rem; }
   .topBar input { flex-basis: 100%; }
   .meta { width: 100%; margin-inline-start: 0; }
+  .pageVersion { width: auto; margin-inline-start: auto; }
+  .pageStats { text-align: left; }
   .manageGrid { grid-template-columns: 1fr; }
 }
 
