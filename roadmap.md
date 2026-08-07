@@ -28,6 +28,7 @@
 - [x] Sanitized Markdown rendering for public note blocks.
 - [x] Markdown preview toggle in the editor.
 - [x] Basic formatting helpers in the editor.
+- [x] Public renderer usage summary helper restored.
 
 ## Next
 ### v2.3.0
