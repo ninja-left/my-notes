@@ -7,7 +7,7 @@ const ADMIN_PASSWORD = '##I##ENCRYPT##';
 const COOKIE_NAME = 'dp_notes_auth';
 const cookieDays = 30;
 const HISTORY_LIMIT = 2;
-const APP_VERSION = 'v2.2.4';
+const APP_VERSION = 'v2.2.5';
 
 let cachedSeedNotes = null;
 
@@ -354,7 +354,7 @@ function publicShell(embedNotes = null) {
         <option value="active">Active only</option>
         <option value="done">Done only</option>
       </select>
-      <span class="meta pageVersion">v2.2.4</span>
+      <span class="meta pageVersion">v2.2.5</span>
       <span class="meta" id="cardCount">Loading...</span>
     </section>
     <section id="notes" class="container" aria-live="polite" dir="auto"></section>
@@ -405,7 +405,7 @@ function manageShell() {
 </head>
 <body>
   <main>
-    <div class="pageVersion manageVersion">v2.2.4</div>
+    <div class="pageVersion manageVersion">v2.2.5</div>
     <div id="app" dir="ltr"></div>
   </main>
   <div id="toast" style="visibility:hidden; opacity:0;"></div>

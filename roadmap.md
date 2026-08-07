@@ -30,6 +30,7 @@
 - [x] Basic formatting helpers in the editor.
 - [x] Public renderer usage summary helper restored.
 - [x] Public page stats separator cleaned up; hidden-state label and top version badges added.
+- [x] Public page count line restored with safe separators, card usage stats moved to the card footer, and public usage recording restored.
 
 ## Next
 ### v2.3.0
